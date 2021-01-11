@@ -1,0 +1,141 @@
+================================
+Local Setup:
+================================
+docker-machine env docker-vm1
+@FOR /f "tokens=*" %i IN ('docker-machine env docker-vm1') DO @%i
+cd C:\work\vss\mschassis\docker
+startchassis.bat -s rabbitmq
+startchassis.bat -s zipkin
+Git config server path - https://github.ibm.com/soorajshettyv/LabsConfig.git
+RabbitMQ - http://192.168.99.100:15672/
+ConfigServer - http://192.168.99.1:8888/currencyfactorms/dev
+ConfigServer - http://192.168.99.1:8888/convertcurrencyms/dev
+H2 database - http://localhost:9020/h2
+Zipkin - http://192.168.99.100:9411/zipkin
+Actuator - http://localhost:81/actuator/metrics
+Apigateway(getdata) - http://localhost:81/convert/currency/USD/1
+Apigateway(Add/update) - http://localhost:81/factor/addCurrency/AUD/54
+Eureka server - http://192.168.99.1:8761/
+MS1(getdata) - http://192.168.99.1:9010/currencyfactorms/convert/currency/USD/1
+MS2(Add/update) - http://192.168.99.1:9020/convertcurrencyms/factor/addCurrency/AUD/54
+
+========================
+Docker Setup:
+========================
+
+---------------
+Eureka server
+-------------
+cd C:\work\vss\Activities\EurekaServer
+mvn clean package -DSkipTests
+docker build -t soorajshettyv/eurekaserverblore:1 .
+docker run -p 8761:8761 -d --name eurekaserver soorajshettyv/eurekaserverblore:1
+docker push soorajshettyv/eurekaserverblore:1
+Eurekaserver - http://192.168.99.100:8761/
+
+-------------
+Config server
+-------------
+cd C:\work\vss\Activities\ConfigServer
+mvn clean package -DSkipTests
+docker build -t soorajshettyv/configserverblore:1 .
+docker run -p 8888:8888 -d --name configserver soorajshettyv/configserverblore:1
+docker push soorajshettyv/configserverblore:1
+Check configServer - http://192.168.99.100:8888/convertcurrencyms/dev
+
+-------------
+Apigateway
+-------------
+cd C:\work\vss\Activities\ConfigServer
+mvn clean package -DSkipTests
+docker build -t soorajshettyv/apigatewayblore:1 .
+docker run -p 81:81 -d --name apigateway soorajshettyv/apigatewayblore:1
+docker push soorajshettyv/apigatewayblore:1
+Check configServer - http://192.168.99.100:8888/convertcurrencyms/dev
+
+-----------------
+convertcurrencyms
+-----------------
+cd C:\work\vss\Activities\ConvertCurrencyMS
+mvn clean package -DSkipTests
+docker build -t soorajshettyv/convertcurrencyblore:1 .
+docker push soorajshettyv/convertcurrencyblore:1
+Check configServer - http://localhost:81/convert/currency/USD/1
+
+
+-----------------
+calculatecurrencyms
+-----------------
+cd C:\work\vss\Activities\CalculateCurrencyMS
+mvn clean package -DSkipTests
+docker build -t soorajshettyv/calculatecurrencyblore:1 .
+docker push soorajshettyv/calculatecurrencyblore:1
+Check configServer - http://localhost:81/factor/addCurrency/AUD/54
+
+
+=============================================================
+Kubernets
+=============================================================
+
+----------------
+RabbitMQ
+----------------
+cd C:\work\vss\mschassis\k8s\rabbitmq
+kubectl apply -f rabbitmq-dep-k8s.yaml
+kubectl apply -f rabbitmq-dep-w-k8s.yaml
+kubectl apply -f rabbitmq-svc-k8s.yaml
+RabbitMq : http://192.168.99.105:32146/
+
+
+----------------
+Zipkin
+----------------
+
+cd C:\work\vss\mschassis\k8s\zipkin
+kubectl apply -f zipkin-dep-k8s.yaml
+kubectl apply -f zipkin-svc-k8s.yaml
+Zipkin : http://192.168.99.105:32461/zipkin/
+
+-------------
+EurekaServer
+-------------
+
+cd C:\work\vss\Activities\EurekaServer
+kubectl apply -f eureka-dep-k8s.yaml
+kubectl apply -f eureka-svc-k8s.yaml
+EurekaServer : http://192.168.99.105:32718/
+
+
+-------------
+Config server
+-------------
+
+cd C:\work\vss\Activities\ConfigServer
+kubectl apply -f configserver-dep-k8s.yaml
+kubectl apply -f configserver-svc-k8s.yaml
+ConfigServer : http://192.168.99.105:31421/convertcurrencyms/dev
+
+---------------
+Apigateway
+---------------
+
+cd C:\work\vss\BangaloreApril2020Labs\APIGateway
+kubectl apply -f cloudapigateway-dep-k8s.yaml
+kubectl apply -f cloudapigateway-svc-k8s.yaml
+
+
+------------------
+ConvertCurrencyMS
+------------------
+
+cd C:\work\vss\Activities\ConvertCurrencyMS
+kubectl apply -f convertcurrencyms-dep-k8s.yaml
+http://192.168.99.105:31761/convert/currency/USD/1
+
+---------------------
+CalculateCurrencyMS
+--------------------
+
+cd C:\work\vss\Activities\CalculateCurrencyMS
+kubectl apply -f currencyfactorms-dep-k8s.yaml
+http://192.168.99.105:31761/factor/addCurrency/AUD/54

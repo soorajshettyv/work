@@ -1,0 +1,117 @@
+http://192.168.99.1:8761/
+
+POST - http://192.168.99.1:9101/api/user/register
+
+{  
+   "username"  : "admin",
+   "email" : "admin@gmail.com",
+   "password" : "password"
+ }  
+
+
+POST - http://192.168.99.1:8765/accountloginms/api/user/register
+
+{  
+   "username"  : "admin",
+   "email" : "admin@gmail.com",
+   "password" : "password",
+   "role" : ["admin"]
+} 
+
+{  
+   "username"  : "test",
+   "email" : "test@gmail.com",
+   "password" : "password"
+} 
+
+
+POST - http://192.168.99.1:8765/accountloginms/api/user/login
+
+{
+	"username": "admin",
+	"password": "password"
+}
+
+
+
+
+POST - http://192.168.99.1:8765/accountloginms/api/grocery/product/add/
+
+{
+	"productId" : 1,
+	"productname": "Samsung TV",
+	"price_per_unit": "40000",
+	"unit": "1",
+	"inventory": "1",
+	"category": "Electronics"
+	
+}
+
+{
+	"productId" : 2,
+	"productname": "Sony TV",
+	"price_per_unit": "50000",
+	"unit": "1",
+	"inventory": "1",
+	"category": "Electronics"
+	
+}
+
+{
+	"productId" : 3,
+    "productname": "Samsung M51",
+	"price_per_unit": "25000",
+	"unit": "1",
+	"inventory": "2",
+	"category": "Electronics"
+	
+}
+
+{
+	"productId" : 4,
+    "productname": "Samsung M31",
+	"price_per_unit": "20000",
+	"unit": "1",
+	"inventory": "2",
+	"category": "Electronics"
+	
+}
+
+GET - http://192.168.99.1:8765/accountloginms/api/grocery/product/all/
+
+PUT - http://192.168.99.1:8765/accountloginms/api/grocery/product/update/
+
+{
+	"productId" : 4,
+    "productname": "Samsung M31",
+	"price_per_unit": "21000",
+	"unit": "1",
+	"inventory": "2",
+	"category": "Electronics"
+	
+}
+
+GET - http://192.168.99.1:8765/accountloginms/api/grocery/product/4/
+
+DELETE - http://192.168.99.1:8765/accountloginms/api/grocery/product/delete/Samsung M31/
+
+-------------------------------------------------
+Adding to Cart
+
+POST - http://192.168.99.1:8765/accountloginms/api/grocery/cart/add?userId=3&productId=2&quantity=1
+
+---------------------
+Checkout 
+
+GET - http://192.168.99.1:8765/cartms/cart/details/?userId=3
+GET - http://192.168.99.1:8765/cartms/cart/checkout/?userId=3
+
+---------------------------
+View order
+http://192.168.99.1:8765/accountloginms/api/grocery/order/view/user?userId=3
+http://192.168.99.1:8765/accountloginms/api/grocery/order/view?orderId=1688326754037399553
+
+
+
+eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIlJPTEUiOiJST0xFX0FETUlOIiwiaWF0IjoxNjEwMTEyNzMyLCJleHAiOjE2MTAxOTkxMzJ9.U63wR1OxKfd5OndwuztNq0bm4sRx_hhs9wThJSy8cUdfyiHobc-jSlOPUJAehiMYx9K9ZxPbxcbw6ZckUWX5Ig
+
